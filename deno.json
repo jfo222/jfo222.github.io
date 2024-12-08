@@ -1,0 +1,6 @@
+{
+    "tasks": {
+        "start": "deno -A deno-server.mjs"
+    }
+}
+

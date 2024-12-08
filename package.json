@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "start": "bun bun-server.mjs"
+    }
+}
+
