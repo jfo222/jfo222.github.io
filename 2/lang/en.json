@@ -1,0 +1,34 @@
+{
+    "aural": ["c", "f", "g", "j", "k", "q", "t", "w"],
+    "btns": {
+        "0": "A",
+        "1": "L",
+        "2": "Buttons",
+        "3": " On",
+        "4": " Off"
+    },
+    "ctrl": {
+        "0": "N",
+        "1": "X"
+    },
+    "error": {
+        "0": "Unsound value",
+        "1": "No speech API"
+    },
+    "ol": {
+        "0": "Start task on the circle",
+        "1": "Find repeats of N states back",
+        "2": "Visual press A, aural press L",
+        "3": "End task on the center cross"
+    },
+    "res": {
+        "0": "Index",
+        "1": "Block",
+        "2": "Average",
+        "3": "Next up",
+        "4": " back",
+        "5": "Targets",
+        "6": "Non-targets"
+    }
+}
+

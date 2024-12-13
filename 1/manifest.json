@@ -1,0 +1,24 @@
+{
+    "name": "Limited Hold - JFO",
+    "short_name": "Limited Hold",
+    "description": "A limited hold working memory task.",
+    "id": "/1/",
+    "start_url": "/1/",
+    "display": "standalone",
+    "background_color": "#000",
+    "theme_color": "#000",
+    "icons": [
+        {
+            "src": "./icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        },
+        {
+            "src": "./icon.svg",
+            "type": "image/svg+xml",
+            "sizes": "any",
+            "purpose": "maskable"
+        }
+    ]
+}
+

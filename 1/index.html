@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Limited Hold - JFO</title>
+        <meta name="description" content="A limited hold working memory task." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000" />
+        <link rel="stylesheet" href="./style.css" />
+        <link rel="icon" type="image/svg+xml" sizes="any" href="./icon.svg" />
+        <link rel="canonical" href="https://jfo222.github.io/1/" />
+        <script>
+            (function () {
+                if (location.protocol !== "https:") {
+                    return;
+                }
+                function link(rel, href, as) {
+                    const el = document.createElement("link");
+                    el.rel = rel;
+                    el.href = href;
+                    if (as) {
+                        el.as = as;
+                        el.crossOrigin = "";
+                    }
+                    document.head.append(el);
+                }
+                link("manifest", "./manifest.json");
+                if (!navigator.serviceWorker.controller) {
+                    link("preload", "./font.woff2", "font");
+                }
+                onload = () => navigator.serviceWorker.register("./sw.js");
+            }());
+        </script>
+        <template id="tmpl-1">
+            <p class="help"></p>
+            <div class="speaker"></div>
+            <p class="alt"></p>
+            <ul class="menu">
+                <li id="easy"></li>
+                <li id="medium"></li>
+                <li id="hard"></li>
+            </ul>
+            <p class="source" data-href="https://github.com/jfo222/jfo222.github.io">
+                <span></span>
+            </p>
+            <div class="screen"></div>
+        </template>
+        <template id="tmpl-2">
+            <p class="x"></p>
+            <p class="esc"></p>
+            <div class="circle"></div>
+        </template>
+        <template id="tmpl-3">
+            <ul class="result">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </template>
+    </head>
+    <body>
+        <script type="module" src="./script.mjs"></script>
+    </body>
+</html>
+

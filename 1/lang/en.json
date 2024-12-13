@@ -1,0 +1,23 @@
+{
+    "ctrl": {
+        "0": "X",
+        "1": "Esc"
+    },
+    "menu": {
+        "0": "Easy",
+        "1": "Medium",
+        "2": "Hard"
+    },
+    "ol": {
+        "0": "Choose difficulty",
+        "1": "Start task on the circle",
+        "2": "Observe stimuli",
+        "3": "Press the right order"
+    },
+    "res": {
+        "0": "Rotten Luck",
+        "1": "Well Played",
+        "2": " sec"
+    }
+}
+
