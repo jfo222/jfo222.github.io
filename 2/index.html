@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>N-back - JFO</title>
+        <meta name="description" content="A dual n-back working memory task." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000" />
+        <link rel="stylesheet" href="./style.css" />
+        <link rel="icon" type="image/svg+xml" sizes="any" href="./icon.svg" />
+        <link rel="canonical" href="https://jfo222.github.io/2/" />
+        <script>
+            (function () {
+                if (location.protocol !== "https:") {
+                    return;
+                }
+                function link(rel, href, as) {
+                    const el = document.createElement("link");
+                    el.rel = rel;
+                    el.href = href;
+                    if (as) {
+                        el.as = as;
+                        el.crossOrigin = "";
+                    }
+                    document.head.append(el);
+                }
+                link("manifest", "./manifest.json");
+                if (!navigator.serviceWorker.controller) {
+                    link("preload", "./font.woff2", "font");
+                }
+                onload = () => navigator.serviceWorker.register("./sw.js");
+            }());
+        </script>
+        <template id="tmpl-0">
+            <div class="grid">
+                <div class="sq s-1"></div>
+                <div class="sq s-2"></div>
+                <div class="sq s-3"></div>
+                <div class="sq s-4"></div>
+                <div class="center"></div>
+                <div class="sq s-5"></div>
+                <div class="sq s-6"></div>
+                <div class="sq s-7"></div>
+                <div class="sq s-8"></div>
+            </div>
+        </template>
+        <template id="tmpl-1">
+            <p class="n"></p>
+            <div class="speaker"></div>
+            <p class="x"></p>
+            <p class="help"></p>
+            <div class="screen"></div>
+        </template>
+        <template id="tmpl-2">
+            <ul class="btns">
+                <li></li>
+                <li></li>
+            </ul>
+        </template>
+        <template id="tmpl-3">
+            <ul class="result">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="circle none"></div>
+        </template>
+    </head>
+    <body>
+        <script type="module" src="./script.mjs"></script>
+    </body>
+</html>
+

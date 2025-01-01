@@ -1,0 +1,26 @@
+{
+    "ctrl": {
+        "0": "X",
+        "1": "Color"
+    },
+    "error": {
+        "0": "Unsound value",
+        "1": "No speech API"
+    },
+    "ol": {
+        "0": "Start task on the circle",
+        "1": "Note sequence of stimuli",
+        "2": "Recall the order backwards",
+        "3": "Abort task on the red X"
+    },
+    "res": {
+        "0": "No Match",
+        "1": "Well Played",
+        "2": "Level",
+        "3": "Memory",
+        "4": "Good",
+        "5": "Great",
+        "6": "Super"
+    }
+}
+

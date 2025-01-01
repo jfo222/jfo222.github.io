@@ -1,0 +1,25 @@
+{
+    "alphanumeric": "numeric",
+    "altMask": {
+        "arrow": true,
+        "char": false
+    },
+    "lang": false,
+    "limitMax": 9,
+    "limitMin": 5,
+    "randomize": {
+        "arrow": true,
+        "char": true
+    },
+    "reverse": {
+        "arrow": "alternate",
+        "char": false
+    },
+    "sound": true,
+    "time": {
+        "easy": 0,
+        "hard": 210,
+        "medium": 1500
+    }
+}
+
