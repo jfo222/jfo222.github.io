@@ -4,7 +4,7 @@ const config = {
     port: 8022,
     startDir: "1"
 };
-(function () {
+(async function () {
     const {platform} = process;
     const base = `http://${config.hostname}:${config.port}/`;
     const cmd = (
@@ -42,7 +42,7 @@ const config = {
     });
     console.log(`\nListening on ${base}`);
     if (config.browser) {
-        Bun.spawn([...cmd.split(" "), base]);
+        await Bun.$`${cmd.split(" ")} ${base}`;
     }
 }());
 
