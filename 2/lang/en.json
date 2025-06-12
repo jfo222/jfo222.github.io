@@ -11,10 +11,6 @@
         "0": "N",
         "1": "X"
     },
-    "error": {
-        "0": "Unsound value",
-        "1": "No speech API"
-    },
     "ol": {
         "0": "Start task on the circle",
         "1": "Find repeats of N states back",

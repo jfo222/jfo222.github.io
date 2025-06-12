@@ -37,20 +37,19 @@ import config from "./config.json" with {type: "json"};
         }
         return el;
     }
-    function error(id) {
+    function error(txt) {
         const el = create("div", board);
         el.className = "error";
-        el.textContent = `[${lang.error[id]}]`;
+        el.textContent = `[${txt}]`;
     }
     function loadLang() {
-        const tags = ["en", "zh"];
-        const path = `./lang/${
-            config.lang ||
-            tags.find((t) => t === navigator.language.slice(0, 2)) ||
-            "en"
-        }.json`;
+        const path = `./lang/${config.lang}.json`;
         async function getJSON(file) {
             const res = await fetch(file);
+            if (!res.ok) {
+                error("No language file");
+                throw new Error();
+            }
             lang = await res.json();
         }
         return getJSON(path);
@@ -188,7 +187,7 @@ import config from "./config.json" with {type: "json"};
         board.append(grid);
         main();
         if (!speech) {
-            error(1);
+            error("No speech API");
         }
     }
     function prep() {
@@ -442,7 +441,7 @@ import config from "./config.json" with {type: "json"};
                 : 0
             ) > trials
         ) {
-            error(0);
+            error("Unsound value");
             return;
         }
         V.block = build([

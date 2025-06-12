@@ -5,7 +5,7 @@
 |  ------                     |  ------                                    |  ------                       |
 |  alphanumeric               |  Sets characters of stimuli                |  "alpha", "numeric"           |
 |  altMask arrow/char         |  Sets alternative mask                     |  Boolean                      |
-|  lang                       |  Sets language                             |  "en", "zh"                   |
+|  lang                       |  Sets language from available files        |  "en"                         |
 |  limitMax/limitMin          |  Stimuli range                             |  Integer                      |
 |  randomize arrow            |  Randomized within the stimulus sector     |  Boolean                      |
 |  randomize char             |  Randomized instead of sequential          |  Boolean                      |

@@ -9,21 +9,21 @@ body {
     font: 400 16px/1.2 font, sans-serif;
 }
 .sq {
-    line-height: 0.85;
+    line-height: 0.9;
 }
 .result,
 p {
     letter-spacing: 0.03em;
 }
 .panel {
-    line-height: 1.23;
+    line-height: 1.33;
 }
 p {
-    line-height: 1.9;
+    line-height: 1.95;
 }
 .x,
 .alt {
-    line-height: 1.45;
+    line-height: 1.5;
 }
 
 /* General */
@@ -178,20 +178,20 @@ ol li::before,
     border-radius: 0.8em;
     box-shadow: 0 0 6em #666, 0 0 2em #ccc;
     font-size: 1.2em;
-    height: 11.15em;
+    height: 11em;
     margin-top: -3.2em;
     min-width: 18.152em;
 }
 .result li {
     font-size: 1.7em;
     font-weight: 640;
-    margin: 0.6em 1em;
+    margin: 0.56em 1.2em;
     text-shadow: 0.12em 0.09em 0 #000;
     white-space: pre;
 }
 .result li:first-child {
     font-size: 2em;
-    margin: 0.55em 1em 0;
+    margin: 0.6em 1em 0;
 }
 .complete {
     color: #2b2;
@@ -199,7 +199,7 @@ ol li::before,
 .result .match {
     gap: 0.65em 0.13em;
     grid: auto / repeat(var(--match), 0.9em);
-    margin: 0.6em 0 0.8em;
+    margin: 0.6em 1.2em 0.8em;
 }
 .result li.match:has(.color) {
     margin-top: 0.7em;
@@ -282,7 +282,7 @@ ol {
     font-size: 0.83em;
     font-weight: 400;
     line-height: 1.7;
-    margin: 0.5em 1.7em 0.9em 2.6em;
+    margin: 0.55em 1.7em 0.9em 2.6em;
     text-align: left;
 }
 ol li::before {

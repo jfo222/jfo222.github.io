@@ -1,11 +1,10 @@
-const id = "#1:25.01.01";
+const id = "#1:25.06.12";
 const shell = [
     "./",
     "./config.json",
     "./font.woff2",
     "./icon.svg",
     "./lang/en.json",
-    "./lang/zh.json",
     "./manifest.json",
     "./script.mjs",
     "./style.css"

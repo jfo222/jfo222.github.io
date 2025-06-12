@@ -13,14 +13,14 @@ p {
     letter-spacing: 0.03em;
 }
 .btns li {
-    line-height: 1.55;
+    line-height: 1.6;
 }
 p {
-    line-height: 1.9;
+    line-height: 1.95;
 }
 .n,
 .x {
-    line-height: 1.45;
+    line-height: 1.5;
 }
 
 /* General */
@@ -158,20 +158,20 @@ ol li::before,
     border-radius: 0.8em;
     box-shadow: 0 0 6em #666, 0 0 2em #ccc;
     font-size: 1.2em;
-    height: 11.15em;
+    height: 11em;
     margin-top: -3em;
     min-width: 18.152em;
 }
 .result li {
     font-size: 1.7em;
     font-weight: 640;
-    margin: 0.6em 1em;
+    margin: 0.56em 1.2em;
     text-shadow: 0.12em 0.09em 0 #000;
     white-space: pre;
 }
 .result li:first-child {
     font-size: 2em;
-    margin: 0.55em 1em 0;
+    margin: 0.6em 1em 0;
 }
 
 /* Controls */
@@ -269,7 +269,7 @@ ol {
     font-size: 0.83em;
     font-weight: 400;
     line-height: 1.7;
-    margin: 0.5em 1.7em 0.9em 2.6em;
+    margin: 0.55em 1.7em 0.9em 2.6em;
     text-align: left;
 }
 ol li::before {

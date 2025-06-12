@@ -4,7 +4,7 @@
     "base": 20,
     "blocks": 20,
     "buttons": true,
-    "lang": false,
+    "lang": "en",
     "limitMax": 6,
     "limitMin": 2,
     "overlap": 2,

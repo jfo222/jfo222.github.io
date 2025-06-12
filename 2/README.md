@@ -18,7 +18,7 @@
 |  base                       |  Length of sequence equals base + N        |  Integer                      |
 |  blocks (session)           |  Number of blocks in a session             |  Integer                      |
 |  buttons                    |  Enables onscreen buttons                  |  Boolean                      |
-|  lang                       |  Sets language                             |  "en", "zh"                   |
+|  lang                       |  Sets language from available files        |  "en"                         |
 |  limitMax/limitMin          |  N-back range                              |  Integer                      |
 |  overlap                    |  Number of simultaneous targets            |  Integer                      |
 |  overlapCtrl                |  Enables controlled overlap                |  Boolean                      |

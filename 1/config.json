@@ -4,7 +4,7 @@
         "arrow": true,
         "char": false
     },
-    "lang": false,
+    "lang": "en",
     "limitMax": 9,
     "limitMin": 5,
     "randomize": {
@@ -18,8 +18,8 @@
     "sound": true,
     "time": {
         "easy": 0,
-        "hard": 210,
-        "medium": 1500
+        "medium": 1500,
+        "hard": 210
     }
 }
 

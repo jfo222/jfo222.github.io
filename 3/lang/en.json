@@ -3,10 +3,6 @@
         "0": "X",
         "1": "Color"
     },
-    "error": {
-        "0": "Unsound value",
-        "1": "No speech API"
-    },
     "ol": {
         "0": "Start task on the circle",
         "1": "Note sequence of stimuli",

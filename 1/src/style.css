@@ -9,10 +9,10 @@ body {
     font: 400 16px/1.2 font, sans-serif;
 }
 .task {
-    line-height: 0.87;
+    line-height: 0.95;
 }
 .char::after {
-    margin-bottom: 0.13em;
+    margin-bottom: 0.05em;
 }
 .result,
 p {
@@ -20,14 +20,12 @@ p {
 }
 .menu li,
 p {
-    line-height: 1.9;
+    line-height: 1.95;
 }
 .x,
-.esc {
-    line-height: 1.45;
-}
+.esc,
 .source {
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* General */
@@ -86,6 +84,10 @@ ol {
     list-style: none;
     white-space: nowrap;
 }
+.speaker,
+.error {
+    font-size: 1.6em;
+}
 .arrow::after,
 .marker::before,
 .marker::after,
@@ -98,6 +100,10 @@ ol li::before,
 .screen::after {
     position: absolute;
 }
+.error {
+    font-family: monospace;
+    margin: 4em 0 0;
+}
 .none {
     display: none;
 }
@@ -109,9 +115,9 @@ ol li::before,
     margin: 16px 0 0 16px;
     place-self: start;
 }
-.speaker {
+.speaker,
+.error {
     grid-area: 1 / 2;
-    margin: 16px 0 0;
 }
 .alt,
 .esc {
@@ -185,20 +191,20 @@ ol li::before,
     border-radius: 0.8em;
     box-shadow: 0 0 6em #666, 0 0 2em #ccc;
     font-size: 1.2em;
-    height: 11.15em;
+    height: 11em;
     margin-top: -3.2em;
     min-width: 18.152em;
 }
 .result li {
     font-size: 1.7em;
     font-weight: 640;
-    margin: 0.6em 1em;
+    margin: 0.56em 1.2em;
     text-shadow: 0.12em 0.09em 0 #000;
     white-space: pre;
 }
 .result li:first-child {
     font-size: 2em;
-    margin: 0.55em 1em 0;
+    margin: 0.6em 1em 0;
 }
 
 /* Controls */
@@ -284,7 +290,7 @@ ol {
     font-size: 0.83em;
     font-weight: 400;
     line-height: 1.7;
-    margin: 0.5em 1.7em 0.9em 2.6em;
+    margin: 0.55em 1.7em 0.9em 2.6em;
     text-align: left;
 }
 ol li::before {
@@ -305,7 +311,7 @@ ol li::before {
     z-index: 10;
 }
 .speaker {
-    font-size: 1.6em;
+    margin: 16px 0 0;
 }
 .x,
 .esc,
@@ -414,7 +420,8 @@ p.active ol {
     .alt {
         font-size: 1.2em;
     }
-    .speaker {
+    .speaker,
+    .error {
         font-size: 1.3em;
     }
     .source::before {

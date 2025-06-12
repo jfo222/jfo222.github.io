@@ -3,7 +3,7 @@
     "autoDown": 3,
     "autoUp": 2,
     "columns": 3,
-    "lang": false,
+    "lang": "en",
     "limitMin": 3,
     "qty": {
         "char": 10,
