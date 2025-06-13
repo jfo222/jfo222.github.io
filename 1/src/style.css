@@ -258,6 +258,7 @@ ol li::before,
     width: 50%;
 }
 .menu {
+    font-optical-sizing: none;
     margin-top: 1.3em;
 }
 .menu li,
