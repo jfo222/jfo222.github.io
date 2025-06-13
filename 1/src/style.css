@@ -2,30 +2,32 @@
 @font-face {
     font-display: swap;
     font-family: font;
-    font-weight: 400 700;
+    font-weight: 400 600;
     src: url("./font.woff2");
 }
 body {
     font: 400 16px/1.2 font, sans-serif;
+    letter-spacing: 0.06em;
 }
 .task {
     line-height: 0.95;
 }
 .char::after {
-    margin-bottom: 0.05em;
+    margin-bottom: -0.05em;
 }
-.result,
-p {
-    letter-spacing: 0.03em;
+.result {
+    letter-spacing: 0.07em;
 }
 .menu li,
 p {
-    line-height: 1.95;
+    line-height: 2;
 }
 .x,
-.esc,
+.esc {
+    line-height: 1.55;
+}
 .source {
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 /* General */
@@ -62,11 +64,6 @@ body {
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
-}
-.task,
-.help,
-.alt {
-    font-weight: 500;
 }
 .mask,
 .circle,
@@ -145,6 +142,7 @@ ol li::before,
 .task {
     --sq: 136px;
     font-size: var(--sq);
+    font-weight: 480;
     grid: repeat(6, 1fr) / repeat(8, 1fr);
     height: 98dvh;
     padding-top: 2dvh;
@@ -197,14 +195,14 @@ ol li::before,
 }
 .result li {
     font-size: 1.7em;
-    font-weight: 640;
-    margin: 0.56em 1.2em;
+    font-weight: 600;
+    margin: 0.6em 1.2em;
     text-shadow: 0.12em 0.09em 0 #000;
     white-space: pre;
 }
 .result li:first-child {
     font-size: 2em;
-    margin: 0.6em 1em 0;
+    margin: 0.59em 1em 0;
 }
 
 /* Controls */
@@ -303,6 +301,7 @@ ol li::before {
 .help,
 .alt {
     font-size: 1.5em;
+    font-weight: 500;
     min-height: 2em;
     min-width: 2.1em;
 }

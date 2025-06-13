@@ -2,28 +2,28 @@
 @font-face {
     font-display: swap;
     font-family: font;
-    font-weight: 400 700;
+    font-weight: 400 600;
     src: url("./font.woff2");
 }
 body {
     font: 400 16px/1.2 font, sans-serif;
+    letter-spacing: 0.06em;
 }
 .sq {
-    line-height: 0.9;
+    line-height: 0.95;
 }
-.result,
-p {
-    letter-spacing: 0.03em;
+.result {
+    letter-spacing: 0.07em;
 }
 .panel {
-    line-height: 1.33;
+    line-height: 1.4;
 }
 p {
-    line-height: 1.95;
+    line-height: 2;
 }
 .x,
 .alt {
-    line-height: 1.5;
+    line-height: 1.55;
 }
 
 /* General */
@@ -69,9 +69,8 @@ p {
     border-radius: 0.2em;
 }
 .sq,
-.panel,
-.help {
-    font-weight: 500;
+.panel {
+    font-weight: 480;
 }
 .result,
 p {
@@ -184,14 +183,14 @@ ol li::before,
 }
 .result li {
     font-size: 1.7em;
-    font-weight: 640;
-    margin: 0.56em 1.2em;
+    font-weight: 600;
+    margin: 0.6em 1.2em;
     text-shadow: 0.12em 0.09em 0 #000;
     white-space: pre;
 }
 .result li:first-child {
     font-size: 2em;
-    margin: 0.6em 1em 0;
+    margin: 0.59em 1em 0;
 }
 .complete {
     color: #2b2;
@@ -199,7 +198,7 @@ ol li::before,
 .result .match {
     gap: 0.65em 0.13em;
     grid: auto / repeat(var(--match), 0.9em);
-    margin: 0.6em 1.2em 0.8em;
+    margin: 0.66em 1.2em 0.8em;
 }
 .result li.match:has(.color) {
     margin-top: 0.7em;
@@ -220,7 +219,7 @@ ol li::before,
     background: #fff;
     box-shadow: 0.17em 0.17em 0 #000;
     height: 2px;
-    top: 7.12em;
+    top: 7.2em;
     width: 60%;
 }
 
@@ -302,6 +301,7 @@ ol li::before {
 }
 .help {
     font-size: 1.5em;
+    font-weight: 500;
     min-height: 2em;
     min-width: 2.1em;
     z-index: 10;
