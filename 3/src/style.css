@@ -196,9 +196,9 @@ ol li::before,
     color: #2b2;
 }
 .result .match {
-    gap: 0.65em 0.13em;
+    gap: 0.62em 0.13em;
     grid: auto / repeat(var(--match), 0.9em);
-    margin: 0.66em 1.2em 0.8em;
+    margin: 0.6em 1.2em 0.75em;
 }
 .result li.match:has(.color) {
     margin-top: 0.7em;
@@ -219,8 +219,11 @@ ol li::before,
     background: #fff;
     box-shadow: 0.17em 0.17em 0 #000;
     height: 2px;
-    top: 7.2em;
+    top: 7em;
     width: 60%;
+}
+.result:has(.color)::before {
+    top: 7.15em;
 }
 
 /* Controls */
