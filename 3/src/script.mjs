@@ -258,7 +258,7 @@ import config from "./config.json" with {type: "json"};
     }
     function build() {
         let stm = "";
-        const [s, stim] = [[], []];
+        const [s, stim, qty] = [[], [], config.qty[tsk]];
         const random = (a) => a.splice(
             Math.floor(Math.random() * a.length),
             1
@@ -268,7 +268,7 @@ import config from "./config.json" with {type: "json"};
                 const a = [...new Array(10).keys()].map((inc) => 48 + inc);
                 if (config.alphanumeric) {
                     a.push(...[...new Array(26).keys()].map((inc) => 65 + inc));
-                    while (a.length > config.qty[tsk]) {
+                    while (a.length > qty) {
                         random(a);
                     }
                 } else {
@@ -289,6 +289,9 @@ import config from "./config.json" with {type: "json"};
             }
         };
         alt[tsk]();
+        if (qty < stimuli.length) {
+            stimuli.length = qty;
+        }
         stim.push(...stimuli);
         stm = random(stim);
         function ptrn(a, b) {
