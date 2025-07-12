@@ -1,0 +1,24 @@
+{
+	"background_color": "#000",
+	"description": "A dual n-back working memory task.",
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "any",
+			"src": "./icon.svg",
+			"type": "image/svg+xml"
+		},
+		{
+			"purpose": "maskable",
+			"sizes": "any",
+			"src": "./icon.svg",
+			"type": "image/svg+xml"
+		}
+	],
+	"id": "/2/",
+	"name": "N-back - JFO",
+	"short_name": "N-back",
+	"start_url": "/2/",
+	"theme_color": "#000"
+}
+

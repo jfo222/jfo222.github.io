@@ -1,0 +1,17 @@
+{
+	"autoDown": 5,
+	"autoUp": 3,
+	"base": 20,
+	"blocks": 20,
+	"buttons": true,
+	"lang": "en",
+	"limitMax": 6,
+	"limitMin": 2,
+	"overlap": 2,
+	"overlapCtrl": true,
+	"sound": true,
+	"targets": 6,
+	"timeRate": 3000,
+	"timeStimulus": 500
+}
+

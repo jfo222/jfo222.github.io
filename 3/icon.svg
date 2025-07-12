@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+	<title>Backwards - JFO</title>
+	<rect width="100%" height="100%" />
+	<circle fill="#288bd7" cx="256" cy="256" r="58.8" />
+	<g stroke="#288bd7" stroke-linecap="round" stroke-width="26">
+		<path d="m374.03043 137.96959-45.24619 45.2462" />
+		<path d="m422.92022 256.00001-63.98778 1e-5" />
+		<path d="m374.03041 374.03043-45.2462-45.24619" />
+		<path d="m255.99998 422.92022v-63.98778" />
+		<path d="m137.96957 374.03041 45.24619-45.2462" />
+		<path d="m89.079779 255.99999 63.987781-1e-5" />
+		<path d="m137.96959 137.96957 45.2462 45.24619" />
+		<path d="m256.00001 89.07978 1e-5 63.98778" />
+	</g>
+</svg>
+
