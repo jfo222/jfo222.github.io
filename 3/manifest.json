@@ -1,0 +1,24 @@
+{
+	"background_color": "#000",
+	"description": "A backwards working memory task.",
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "any",
+			"src": "./icon.svg",
+			"type": "image/svg+xml"
+		},
+		{
+			"purpose": "maskable",
+			"sizes": "any",
+			"src": "./icon.svg",
+			"type": "image/svg+xml"
+		}
+	],
+	"id": "/3/",
+	"name": "Backwards - JFO",
+	"short_name": "Backwards",
+	"start_url": "/3/",
+	"theme_color": "#000"
+}
+
