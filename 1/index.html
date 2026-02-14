@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Limited Hold - JFO</title>
+		<meta name="description" content="A limited hold working memory task." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#000" />
+		<link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect width='100%25' height='100%25'/%3E%3Ccircle cx='512' cy='512' r='275' stroke='%23a9aaae' stroke-width='90'/%3E%3C/svg%3E" />
+		<script defer src="./config.js"></script>
+		<script>
+		(() => {
+			const base = location.origin;
+			const protocol = location.protocol;
+			const sw = navigator.serviceWorker;
+			function createLink(rel, href, as) {
+				const link = document.createElement("link");
+				link.rel = rel;
+				link.href = href;
+				if (as) {
+					link.as = as;
+					link.crossOrigin = "";
+				}
+				document.head.append(link);
+			}
+			if (protocol.includes("http") && !sw.controller) {
+				createLink("preload", "./font.woff2", "font");
+			}
+			if (protocol === "https:") {
+				createLink("manifest", `data:application/manifest+json,${encodeURIComponent(
+					JSON.stringify({
+						"background_color": "#000",
+						"description": "A limited hold working memory task.",
+						"display": "standalone",
+						"icons": [{
+							"purpose": "any maskable",
+							"sizes": "any",
+							"src": `${base}/1/icon.svg`,
+							"type": "image/svg+xml"
+						}],
+						"id": `${base}/1/`,
+						"name": "Limited Hold - JFO",
+						"short_name": "Limited Hold",
+						"start_url": `${base}/1/`,
+						"theme_color": "#000"
+					})
+				)}`);
+				addEventListener("load", () => sw.register("./sw.js"), {once: true});
+			}
+		})();
+		</script>
+		<style>
+		@font-face {
+			font-display: swap;
+			font-family: font;
+			font-weight: 400 600;
+			src: url("./font.woff2");
+		}
+		html,
+		body {
+			height: 100dvh;
+			overflow: clip;
+			position: fixed;
+			width: 100dvw;
+		}
+		body,
+		ul,
+		ol,
+		p {
+			margin: 0;
+			padding: 0;
+		}
+		body,
+		.circle,
+		:is(.marker, .screen)::after {
+			background: #000;
+		}
+		body,
+		.screen {
+			display: grid;
+		}
+		body {
+			--colBg: #2d3f2b;
+			--colMsk: #fff;
+			--colTheme1: #a9aaae;
+			--colTheme2: #fff;
+			color: var(--colTheme1);
+			cursor: default;
+			font: 400 16px/1.2 font, sans-serif;
+			grid: 32% 40% 28% / 20% 60% 20%;
+			letter-spacing: 0.06em;
+			place-items: start center;
+			text-align: center;
+			touch-action: none;
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		.mask-2 {
+			--colMsk: var(--colTheme1);
+		}
+		.help,
+		.x {
+			grid-area: 1 / 1;
+			margin: 16px 0 0 16px;
+			place-self: start;
+		}
+		.alt,
+		.esc {
+			grid-area: 1 / 3;
+			margin: 16px 16px 0 0;
+			place-self: start end;
+		}
+		.speaker {
+			grid-area: 1 / 2;
+			margin: 16px 0 0;
+		}
+		.result,
+		.menu {
+			grid-area: 2 / 2;
+		}
+		.circle {
+			grid-area: 3 / 2;
+			margin: 0 0 16px;
+			place-self: end center;
+		}
+		.ctrlstack {
+			grid-area: 3 / 3;
+			margin: 0 16px 16px 0;
+			place-self: end;
+		}
+		.night-mode {
+			--colBg: #222;
+			--colMsk: var(--colTheme2);
+			--colTheme1: #bf170d;
+			--colTheme2: #800;
+		}
+		.night-mode .result,
+		.night-mode p {
+			border-color: var(--colTheme1);
+		}
+		.night-mode ol {
+			color: var(--colTheme1);
+		}
+		.night-mode .circle.active {
+			opacity: 0.5;
+		}
+		.night-mode .marker.active::before {
+			background: #444;
+		}
+		.night-mode p.active,
+		.night-mode p.active ol {
+			color: var(--colTheme2);
+		}
+		.night-mode p.active {
+			border-color: var(--colTheme2);
+		}
+		.task {
+			--sq: 56px;
+			color: var(--colTheme2);
+			font-size: var(--sq);
+			font-weight: 480;
+			grid: repeat(6, 1fr) / repeat(8, 1fr);
+			height: 98dvh;
+			line-height: 0.95;
+			padding-top: 2dvh;
+			place-items: center;
+		}
+		.task div,
+		.arrow::after {
+			height: var(--sq);
+			width: var(--sq);
+		}
+		:is(.arrow, .mask-2 .mask)::after {
+			display: block;
+		}
+		:is(.arrow, .mask-2 .mask, .marker, .screen)::after,
+		.marker::before {
+			content: "";
+		}
+		.arrow::after {
+			background: var(--colTheme2);
+			clip-path: polygon(
+				50% 4%,
+				75% 40.7%,
+				56.6% 36%,
+				58.3% 96%,
+				41.7% 96%,
+				43.4% 36%,
+				25% 40.7%
+			);
+			rotate: var(--stm);
+		}
+		.char::after {
+			content: var(--stm);
+			margin-top: 0.05em;
+		}
+		.wrong {
+			color: #d00;
+		}
+		.wrong.arrow::after {
+			background: #d00;
+		}
+		.preload {
+			border: 0 !important;
+			height: 1px;
+			left: 25px;
+			position: fixed;
+			top: 25px;
+			width: 1px;
+			z-index: -10;
+		}
+		.mask-1 .mask,
+		.mask-2 .mask::after {
+			background: var(--colMsk);
+		}
+		.mask-2 .mask,
+		.screen {
+			box-sizing: border-box;
+		}
+		.mask-2 .mask {
+			border: 0.04em solid var(--colMsk);
+		}
+		.mask-2 .mask::after {
+			height: 100%;
+			width: 100%;
+		}
+		.result,
+		p {
+			background: var(--colBg);
+			border: 1px solid #fff5;
+		}
+		.result {
+			border: 0.1em solid;
+			border-radius: 0.8em;
+			box-shadow: 0 0 6em #666, 0 0 2em #ccc;
+			font-size: 0.84em;
+			height: 11em;
+			letter-spacing: 0.07em;
+			margin-top: -3.2em;
+			min-width: 18.152em;
+		}
+		.result li {
+			font-size: 1.7em;
+			font-weight: 600;
+			margin: 0.6em 1.2em;
+			text-shadow: 0.12em 0.09em 0 #000;
+			white-space: pre;
+		}
+		.result li:first-child {
+			font-size: 2em;
+			margin: 0.59em 1em 0;
+		}
+		.circle,
+		.marker::before {
+			position: relative;
+		}
+		.circle,
+		.marker::after {
+			border-radius: 50%;
+		}
+		.circle {
+			border: 0.92em solid var(--colTheme2);
+			font-size: 0.768em;
+			height: 5.9em;
+			width: 5.9em;
+		}
+		.marker {
+			animation: 1s ease-out 0.1s forwards;
+			animation-name: clockwise;
+		}
+		.marker::before,
+		.menu li {
+			display: inline-block;
+		}
+		.marker::after,
+		ol li::before {
+			position: absolute;
+		}
+		.reverse {
+			animation-name: counterclockwise;
+		}
+		@keyframes clockwise {
+			100% {
+				rotate: 45deg;
+			}
+		}
+		@keyframes counterclockwise {
+			100% {
+				rotate: -45deg;
+			}
+		}
+		.marker::before {
+			background: #555;
+			clip-path: polygon(
+				50% 0,
+				72% 36%,
+				28% 36%
+			);
+			height: 90%;
+			top: 5%;
+			width: 90%;
+		}
+		.marker::after {
+			height: 50%;
+			left: 25%;
+			top: 28.4%;
+			width: 50%;
+		}
+		.menu {
+			color: #000;
+			font-optical-sizing: none;
+			font-size: 1.55em;
+			font-weight: 500;
+			margin-top: 4vh;
+		}
+		.menu li,
+		p {
+			border-radius: 0.2em;
+		}
+		.menu li {
+			background: linear-gradient(
+				#000,
+				#999 10%,
+				#999 90%,
+				#000
+			),
+			linear-gradient(
+				90deg,
+				#000,
+				#ccc 5%,
+				#ccc 95%,
+				#000
+			);
+			background-blend-mode: exclusion;
+			height: 2.1em;
+			line-height: 2.1;
+			margin: 0 1.4em;
+			width: 6.5em;
+		}
+		p,
+		ol {
+			line-height: 1.7;
+		}
+		p {
+			font-size: 1.5em;
+			font-weight: 450;
+			height: 1.7em;
+			text-shadow: 0.08em 0.08em 0 #000;
+			width: 4.8em;
+		}
+		.help,
+		.alt {
+			width: 1.75em;
+		}
+		.help:has(ol) {
+			height: auto;
+			width: auto;
+		}
+		.help {
+			z-index: 10;
+		}
+		ul,
+		ol {
+			list-style: none;
+			white-space: nowrap;
+		}
+		ol {
+			color: #ddd;
+			counter-reset: ol;
+			font-size: 0.66em;
+			font-weight: 400;
+			margin: 0.55em 1.7em 0.9em 2.6em;
+			text-align: left;
+		}
+		ol li::before {
+			content: counter(ol) ".";
+			counter-increment: ol;
+			margin-left: -1.7em;
+			text-align: right;
+			width: 1em;
+		}
+		.speaker {
+			font-size: 1.3em;
+		}
+		.ctrlstack {
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			pointer-events: none;
+		}
+		.ctrlstack div {
+			pointer-events: auto;
+		}
+		.mode {
+			background: var(--colTheme1);
+			height: 1.7em;
+			width: 1.7em;
+		}
+		.screen {
+			border: calc(1.5em / 8) solid var(--colTheme1);
+			height: 1.5em;
+			margin-top: 1.7em;
+			place-content: center;
+			width: 1.5em;
+			z-index: -1;
+		}
+		.screen::after {
+			clip-path: polygon(
+				0 31%,
+				31% 31%,
+				31% 0,
+				69% 0,
+				69% 31%,
+				100% 31%,
+				100% 69%,
+				69% 69%,
+				69% 100%,
+				31% 100%,
+				31% 69%,
+				0 69%
+			);
+			height: calc(1.5em + 2px);
+			width: calc(1.5em + 2px);
+		}
+		.none {
+			display: none;
+		}
+		.circle.active {
+			opacity: 0.3;
+		}
+		.marker.active::before {
+			background: #707070;
+		}
+		.menu li.active {
+			opacity: 0.4;
+		}
+		p.active,
+		p.active ol {
+			color: #444;
+		}
+		p.active {
+			border-color: #ffffff35;
+		}
+		:is(.speaker, .ctrlstack div).active {
+			opacity: 0.5;
+		}
+		@media (orientation: portrait) {
+			.task {
+				grid: repeat(9, 1fr) / repeat(5, 1fr);
+			}
+			.menu {
+				margin-top: -0.7em;
+			}
+			.menu li {
+				display: block;
+				margin-bottom: 1.85em;
+			}
+		}
+		@media (min-width: 600px) and (min-height: 600px) {
+			.mask-2 .mask {
+				border-width: 0.03em;
+			}
+		}
+		@media (orientation: portrait) and (min-width: 510px) {
+			.task {
+				--sq: 11vw;
+			}
+		}
+		@media (orientation: landscape) and (min-height: 475px) {
+			.task {
+				--sq: 11.8525vh;
+			}
+		}
+		@media (orientation: portrait) and (min-width: 700px) {
+			.result {
+				font-size: 1.85vw;
+			}
+			.circle {
+				font-size: 1.8vw;
+			}
+			.menu {
+				font-size: 3.8vw;
+			}
+		}
+		@media (orientation: portrait) and (min-width: 780px) {
+			p {
+				font-size: 3.1vw;
+			}
+			ol {
+				font-size: 1.9vw;
+			}
+			.speaker {
+				font-size: 2.6vw;
+			}
+			.ctrlstack {
+				font-size: 2.2vw;
+			}
+		}
+		@media (orientation: landscape) and (min-height: 700px) {
+			.result {
+				font-size: 1.85vh;
+			}
+			.circle {
+				font-size: 1.8vh;
+			}
+			.menu {
+				font-size: 3.8vh;
+			}
+		}
+		@media (orientation: landscape) and (min-height: 780px) {
+			p {
+				font-size: 3.1vh;
+			}
+			ol {
+				font-size: 1.9vh;
+			}
+			.speaker {
+				font-size: 2.6vh;
+			}
+			.ctrlstack {
+				font-size: 2.2vh;
+			}
+		}
+		.mask-1 .mask {
+			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath shape-rendering='crispEdges' d='M64 0h64v64H64zm128 0h64v64h-64zm128 0h64v64h-64zm128 0h64v64h-64zM128 64h64v64h-64zm128 0h64v64h-64zm128 0h64v64h-64zM0 64h64v64H0zm448 64h64v64h-64zm-128 0h64v64h-64zm-128 0h64v64h-64zm-128 0h64v64H64zm320 64h64v64h-64zm-128 0h64v64h-64zm-128 0h64v64h-64zM0 192h64v64H0zm64 64h64v64H64zm128 0h64v64h-64zm128 0h64v64h-64zm128 0h64v64h-64zM0 320h64v64H0zm128 0h64v64h-64zm128 0h64v64h-64zm128 0h64v64h-64zm64 64h64v64h-64zm-128 0h64v64h-64zm-128 0h64v64h-64zm-128 0h64v64H64zM0 448h64v64H0zm128 0h64v64h-64zm128 0h64v64h-64zm128 0h64v64h-64z'/%3E%3C/svg%3E") center/cover;
+		}
+		.mask-2 .mask::after {
+			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M105.7 16c-3 14.1-4.2 16.3-6.1 24.5-12.2 47.3-33.1 101-80.5 188l4 3c13-13.5 23.7-28.9 34.7-44 .5 50.8 2 93.4.4 144.4-2.4 69.5-12.8 111.6-39 161l4 1.6c36.2-43.7 59.7-76.2 64.5-130.5h44v57.8h33V364h39.8v86.1c-.2 5.2 2 7.9-11.2 7.7h-54.5v8.1l54.5 8.2v16.3c34-4.2 43.8-7.9 43.8-43.8V181l13.8-11.2-30-24.5-16.4 13.8h-51c18.8-18.5 36-38.2 52-59.1l24-12.3-30-24.4a162 162 0 0 0-15.2 13.8h-65.4c5.4-12.6 9.6-25.5 14.3-38.3l9.7-3-6.6-7.2zm346 25.5-16.8 13.7H254.5V66h77c-8 51.2-50.6 92.4-83.1 126.4l3 4c68.6-37.1 100-85.9 113.1-130.4H435c-1.4 19.1-2.1 38.4-6.7 57.1-6 18.8-9 32.3-36.7 33.1h-38.2v8.7l38.2 8.1v16.3c20 .5 49-14 61.1-33.4 12-19.2 13.6-61.4 14.4-81.2 5-2.8 9.8-5.8 14.7-8.7zM114.3 87.9h64.2c-33.6 71.4-25.3 55.8-33 71.3H91.8l-11.2-5.6c12.5-21.3 24-43 33.6-65.7zm-22.4 82h39.8v85H91.9zm72.9 0h39.7v85h-39.7zm184.5 19.4v85h-53.7c11.5-27.8 14.7-34.7 24.1-60l9.7-3.1-6.7-7.2-30.5-12.7a3459.6 3459.6 0 0 1-39.8 156l4.6 1.4a754.1 754.1 0 0 0 34-63.7h58.3v79.5h-99.4v10.7h99.4V496l33-16.3V375.2H493v-10.7L460.3 337l-27.5 27.5h-50.4V285h96.8v-10.7L446 246.8l-27 27.5h-36.7V205l8.1-5-8.1-5.1zM91.9 265.6h39.8v87.6H88.9c2-28.7 2.6-47.8 3-87.6zm72.9 0h39.7v87.6h-39.7z'/%3E%3C/svg%3E") center;
+		}
+		.mode {
+			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle cx='256' cy='256' r='80.6'/%3E%3Cpath stroke='%23000' stroke-linecap='round' stroke-width='35.55' d='m417.77 94.23-62.02 62.02M484.78 256h-87.7m20.69 161.77-62.02-62.02M256 484.78v-87.7M94.23 417.76l62.02-62.02M27.22 256h87.7M94.24 94.23l62.02 62.02M256 27.22v87.7'/%3E%3C/svg%3E") center/cover;
+		}
+		</style>
+		<script>
+		addEventListener("DOMContentLoaded", () => {
+			"use strict";
+			const lang = {
+				ctrl: {
+					0: "X",
+					1: "Esc"
+				},
+				menu: {
+					0: "Easy",
+					1: "Medium",
+					2: "Hard"
+				},
+				ol: {
+					0: "Choose difficulty",
+					1: "Start task on the circle",
+					2: "Observe stimuli",
+					3: "Press the right order"
+				},
+				res: {
+					0: "Rotten Luck",
+					1: "Well Played",
+					2: " sec"
+				}
+			};
+			const config = settings,
+				audio = new AudioContext(),
+				[board, head] = [document.body, document.head],
+				tasks = ["arrow", "char"],
+				[xyMax, xyMin] = [8, 5];
+			let block, count, hold, idx, limit, prevHold,
+				prevTsk, score, time1, time2,
+				tsk = "char";
+			function $(sel, el = board) {
+				return el.querySelector(sel);
+			}
+			function create(tag, parent) {
+				const el = document.createElement(tag);
+				if (parent) {
+					parent.append(el);
+				}
+				return el;
+			}
+			function ocillate(props) {
+				if (!config.sound) {
+					return;
+				}
+				const p = {...{
+					gain: 0.2,
+					ramp: true,
+					start: 0,
+					wave: "sine"
+				}, ...props};
+				const o = new OscillatorNode(audio, {
+					frequency: p.freq,
+					type: p.wave
+				});
+				const g = new GainNode(audio, {
+					gain: p.gain
+				});
+				g.gain.setValueAtTime(p.gain, audio.currentTime + p.start + 0.01);
+				if (p.ramp) {
+					g.gain.exponentialRampToValueAtTime(
+						0.0001,
+						audio.currentTime + p.stop
+					);
+				}
+				o.connect(g).connect(audio.destination);
+				o.start(audio.currentTime + p.start);
+				o.stop(audio.currentTime + p.stop);
+			}
+			function playPress() {
+				ocillate({
+					freq: 540,
+					stop: 0.1
+				});
+			}
+			function playAlert() {
+				let [a, b] = [0, 13];
+				const inc = 9;
+				while (b < 68) {
+					ocillate({
+						freq: 1600,
+						start: a / 100,
+						stop: b / 100
+					});
+					a += inc;
+					b += inc;
+				}
+			}
+			function playBuzzer() {
+				ocillate({
+					freq: 140,
+					gain: 0.18,
+					ramp: false,
+					stop: 0.6,
+					wave: "sawtooth"
+				});
+			}
+			function ctrl(el, func, txt) {
+				let active;
+				if (txt) {
+					el.textContent = txt;
+				}
+				el.addEventListener("pointerdown", () => {
+					playPress();
+					el.classList.add("active");
+					active = true;
+					board.addEventListener("pointerup", () => {
+						el.classList.remove("active");
+						active = false;
+					}, {once: true});
+				});
+				el.addEventListener("pointerup", () => {
+					if (active) {
+						el.classList.remove("active");
+						active = false;
+						func(el);
+					}
+				});
+			}
+			function init() {
+				matchMedia("(orientation: portrait)").addEventListener("change", () => {
+					if (board.classList.contains("task")) {
+						block.forEach((sq) => {
+							const a = sq.style.gridArea.split("/");
+							sq.style.gridArea = `${a[1]}/${a[0]}`;
+						});
+					}
+				});
+				if (config.nightMode) {
+					board.className = "night-mode";
+				}
+				board.addEventListener("pointerdown", (e) => e.preventDefault());
+				board.addEventListener("touchend", (e) => e.preventDefault()); //iOS
+				main();
+			}
+			function prep() {
+				[...board.children].forEach((el) => el.remove());
+			}
+			function main() {
+				const clone = $("#tmpl-1", head).content.cloneNode(true);
+				function help(el) {
+					if (!el.firstChild.nodeValue) {
+						el.textContent = "?";
+						return;
+					}
+					el.firstChild.replaceWith(create("ol"));
+					Object.values(lang.ol).forEach((txt) => {
+						create("li", el.firstChild).textContent = txt;
+					});
+				}
+				function setAlt(prssd) {
+					if (prssd) {
+						tsk = tasks.find((t) => tsk !== t);
+					}
+					return (
+						tsk === "char"
+						? "!"
+						: "!!"
+					);
+				}
+				function menu(el) {
+					hold = el.dataset.hold;
+					base();
+				}
+				function speaker(prssd) {
+					if (prssd) {
+						config.sound = !config.sound;
+					}
+					return (
+						config.sound
+						? "🔊"
+						: "🔇"
+					);
+				}
+				function nightMode() {
+					config.nightMode = !config.nightMode;
+					board.classList.toggle("night-mode", config.nightMode);
+				}
+				function fullscreen() {
+					if (document.fullscreenElement) {
+						document.exitFullscreen();
+					} else {
+						board.requestFullscreen();
+					}
+				}
+				prep();
+				ctrl(
+					$(".help", clone),
+					help,
+					"?"
+				);
+				ctrl(
+					$(".alt", clone),
+					(el) => {
+						el.textContent = setAlt(true);
+					},
+					setAlt()
+				);
+				[...$(".menu", clone).children].forEach((li, i) => {
+					ctrl(
+						li,
+						menu,
+						lang.menu[i]
+					);
+				});
+				ctrl(
+					$(".speaker", clone),
+					(el) => {
+						el.textContent = speaker(true);
+					},
+					speaker()
+				);
+				ctrl(
+					$(".mode", clone),
+					nightMode
+				);
+				ctrl(
+					$(".screen", clone),
+					fullscreen
+				);
+				if (!document.fullscreenEnabled) {
+					$(".screen", clone).className = "none";
+				}
+				[score, count] = [0, 0];
+				board.classList.remove(`mask-${config.maskID[tsk]}`);
+				board.append(clone);
+			}
+			function base() {
+				const clone = $("#tmpl-2", head).content.cloneNode(true);
+				const circle = $(".circle", clone);
+				function setX(prssd) {
+					if (prssd) {
+						if (limit < config.limitMax) {
+							limit += 1;
+						} else {
+							limit = config.limitMin;
+						}
+						[score, count] = [0, 0];
+						$(".result")?.remove();
+					} else if (prevHold !== hold || prevTsk !== tsk) {
+						[limit, prevHold, prevTsk] = [config.limitMin, hold, tsk];
+					}
+					return `${lang.ctrl[0]} ${limit}`;
+				}
+				prep();
+				ctrl(
+					$(".x", clone),
+					(el) => {
+						el.textContent = setX(true);
+					},
+					setX()
+				);
+				ctrl(
+					$(".esc", clone),
+					main,
+					lang.ctrl[1]
+				);
+				ctrl(
+					circle,
+					run
+				);
+				if (/^(alt|und)/.test(config.reverse[tsk])) {
+					if (!idx?.length) {
+						config.reverse[tsk] = (
+							config.reverse[tsk]
+							? undefined
+							: "alternate"
+						);
+					}
+					circle.classList.add("marker");
+					circle.classList.toggle("reverse", !!config.reverse[tsk]);
+				}
+				board.classList.add(`mask-${config.maskID[tsk]}`);
+				board.append(clone);
+			}
+			function build() {
+				let [v1, v2] = [1, 0];
+				const columns = (
+					innerWidth > innerHeight
+					? xyMax
+					: xyMin
+				);
+				const areas = Array.from(
+					{length: xyMin * xyMax},
+					() => {
+						if (v2 === columns) {
+							v1 += 1;
+							v2 = 0;
+						}
+						v2 += 1;
+						return `${v1}/${v2}`;
+					}
+				);
+				block = [];
+				function createSq(stm) {
+					const sq = create("div");
+					sq.className = tsk;
+					sq.style.gridArea = areas.splice(
+						Math.floor(Math.random() * areas.length),
+						1
+					)[0];
+					sq.style.setProperty("--stm", stm);
+					block.push(sq);
+				}
+				({
+					arrow() {
+						const sect = Math.round(360 / limit * 100) / 100;
+						let deg;
+						let [s, i] = [sect, 0];
+						if (config.randomize[tsk]) {
+							s -= 4;
+							deg = () => Math.round(s - Math.floor(
+								Math.random() * (sect - 7)
+							));
+						} else {
+							deg = () => Math.round(s - sect / 2);
+						}
+						while (i < limit) {
+							createSq(`${deg()}deg`);
+							s += sect;
+							i += 1;
+						}
+					},
+					char() {
+						const [codePoint, qty] = (
+							config.alphanumeric === "alpha"
+							? [65, 26]
+							: config.limitMax < 10
+							? [49, 9]
+							: [48, 10]
+						);
+						const a = [...new Array(
+							config.limitMax < qty
+							? config.limitMax
+							: qty
+						).keys()].map((inc) => codePoint + inc);
+						if (limit > qty) {
+							limit = qty;
+						}
+						if (config.randomize[tsk]) {
+							while (a.length > limit) {
+								a.splice(Math.floor(Math.random() * a.length), 1);
+							}
+						} else {
+							a.length = limit;
+						}
+						a.forEach((cp) => createSq(`"${String.fromCodePoint(cp)}"`));
+					}
+				})[tsk]();
+				if (config.reverse[tsk]) {
+					block.reverse();
+				}
+			}
+			function unmask(e, sq = e.target.closest(".mask")) {
+				if (!sq) {
+					return;
+				}
+				sq.className = "";
+				if (block.indexOf(sq) !== idx.shift() || !idx.length) {
+					board.removeEventListener("pointerdown", unmask);
+					result(sq);
+				} else {
+					playPress();
+				}
+			}
+			function mask() {
+				block.forEach((sq) => {
+					sq.className = "mask";
+				});
+				time2 = performance.now();
+				board.addEventListener("pointerdown", unmask);
+				count += 1;
+			}
+			function trigger(e) {
+				const sq = e.target.closest("div");
+				if (!sq) {
+					return;
+				}
+				board.removeEventListener("pointerdown", trigger);
+				mask();
+				unmask(e, sq);
+			}
+			function run() {
+				prep();
+				idx = [...new Array(limit).keys()];
+				board.classList.add("task");
+				build();
+				board.append(...block);
+				time1 = performance.now();
+				if (config.time[hold]) {
+					setTimeout(mask, config.time[hold]);
+				} else {
+					board.addEventListener("pointerdown", trigger);
+				}
+			}
+			function result(sq) {
+				let delay = 0;
+				const clone = $("#tmpl-3", head).content.cloneNode(true);
+				const data = [];
+				if (idx.length) {
+					delay = 800;
+					sq.classList.add("wrong", tsk);
+					data.push(`- ${lang.res[0]} -`);
+					playBuzzer();
+				} else {
+					score += 1;
+					data.push(`- ${lang.res[1]} -`);
+					playAlert();
+				}
+				data.push(
+					`${Math.round((score / count) * 100)}% (${score} / ${count})`,
+					`${Math.round((time2 - time1) / 10) / 100}${lang.res[2]}`
+				);
+				data.forEach((txt, i) => {
+					clone.children[0].children[i].textContent = txt;
+				});
+				setTimeout(() => {
+					board.classList.remove("task");
+					base();
+					board.append(clone);
+				}, delay);
+			}
+			init();
+		}, {once: true});
+		</script>
+		<template id="tmpl-1">
+			<p class="help"></p>
+			<div class="speaker"></div>
+			<p class="alt"></p>
+			<ul class="menu">
+				<li data-hold="0"></li>
+				<li data-hold="1"></li>
+				<li data-hold="2"></li>
+			</ul>
+			<div class="ctrlstack">
+				<div class="mode"></div>
+				<div class="screen"></div>
+			</div>
+		</template>
+		<template id="tmpl-2">
+			<div class="preload mask"></div>
+			<p class="x"></p>
+			<p class="esc"></p>
+			<div class="circle"></div>
+		</template>
+		<template id="tmpl-3">
+			<ul class="result">
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</template>
+	</head>
+	<body></body>
+</html>
+

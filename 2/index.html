@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Dual N-back - JFO</title>
+		<meta name="description" content="A dual n-back working memory task." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#000" />
+		<link rel="icon" type="image/svg+xml" sizes="any" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect width='100%25' height='100%25'/%3E%3Ccircle cx='512' cy='512' r='275' stroke='%230d9d7d' stroke-width='90'/%3E%3C/svg%3E" />
+		<script defer src="./config.js"></script>
+		<script>
+		(() => {
+			const base = location.origin;
+			const protocol = location.protocol;
+			const sw = navigator.serviceWorker;
+			function createLink(rel, href, as) {
+				const link = document.createElement("link");
+				link.rel = rel;
+				link.href = href;
+				if (as) {
+					link.as = as;
+					link.crossOrigin = "";
+				}
+				document.head.append(link);
+			}
+			if (protocol.includes("http") && !sw.controller) {
+				createLink("preload", "./font.woff2", "font");
+			}
+			if (protocol === "https:") {
+				createLink("manifest", `data:application/manifest+json,${encodeURIComponent(
+					JSON.stringify({
+						"background_color": "#000",
+						"description": "A dual n-back working memory task.",
+						"display": "standalone",
+						"icons": [{
+							"purpose": "any maskable",
+							"sizes": "any",
+							"src": `${base}/2/icon.svg`,
+							"type": "image/svg+xml"
+						}],
+						"id": `${base}/2/`,
+						"name": "Dual N-back - JFO",
+						"short_name": "Dual N-back",
+						"start_url": `${base}/2/`,
+						"theme_color": "#000"
+					})
+				)}`);
+				addEventListener("load", () => sw.register("./sw.js"), {once: true});
+			}
+		})();
+		</script>
+		<style>
+		@font-face {
+			font-display: swap;
+			font-family: font;
+			font-weight: 400 600;
+			src: url("./font.woff2");
+		}
+		html,
+		body {
+			height: 100dvh;
+			overflow: clip;
+			position: fixed;
+			width: 100dvw;
+		}
+		body,
+		ul,
+		ol,
+		p {
+			margin: 0;
+			padding: 0;
+		}
+		body,
+		.grid,
+		.task .center,
+		.screen {
+			display: grid;
+		}
+		body,
+		.grid {
+			place-items: start center;
+		}
+		body,
+		.circle,
+		.screen::after {
+			background: #000;
+		}
+		body {
+			--colBg: #165742;
+			--colStack: #0d9d7d;
+			--colTheme1: #fff;
+			--colTheme2: #fff;
+			--colTsk: var(--colBg);
+			color: var(--colTheme1);
+			cursor: default;
+			font: 400 16px/1.2 font, sans-serif;
+			grid: 18% 72% 10% / 20% 60% 20%;
+			letter-spacing: 0.06em;
+			text-align: center;
+			touch-action: none;
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		.n {
+			grid-area: 1 / 1;
+			margin: 16px 0 0 16px;
+			place-self: start;
+		}
+		.speaker,
+		.error {
+			grid-area: 1 / 2;
+		}
+		.x {
+			grid-area: 1 / 3;
+			margin: 16px 16px 0 0;
+			place-self: start end;
+		}
+		.grid,
+		.result,
+		.center {
+			grid-area: 2 / 2;
+		}
+		.help {
+			grid-area: 3 / 1;
+			margin: 0 0 16px 16px;
+			place-self: end start;
+		}
+		.circle,
+		.btns {
+			grid-area: 3 / 2;
+			place-self: end center;
+		}
+		.ctrlstack {
+			grid-area: 3 / 3;
+			margin: 0 16px 16px 0;
+			place-self: end;
+		}
+		.night-mode {
+			--colBg: #222;
+			--colTheme1: #bf170d;
+			--colTheme2: #800;
+			--colTsk: #600;
+		}
+		.night-mode .sq {
+			background: var(--colBg);
+		}
+		.night-mode .result,
+		.night-mode p {
+			border-color: var(--colTheme1);
+		}
+		.night-mode.task .center::after {
+			background: #666;
+		}
+		.night-mode .mode {
+			background: var(--colTheme1);
+		}
+		.night-mode .screen {
+			border-color: var(--colTheme1);
+		}
+		.night-mode :is(.center, .circle).active {
+			opacity: 0.5;
+		}
+		.night-mode p.active,
+		.night-mode p.active ol {
+			color: var(--colTheme2);
+		}
+		.night-mode p.active {
+			border-color: var(--colTheme2);
+		}
+		.grid {
+			font-size: 0.51em;
+			gap: 2em;
+			grid: repeat(3, 1fr) / repeat(3, 1fr);
+		}
+		.sq,
+		.btns li,
+		p {
+			border-radius: 0.2em;
+		}
+		.sq {
+			background: #0e382a;
+			height: 11em;
+			width: 11em;
+		}
+		.task .sq {
+			background: unset;
+		}
+		.no-cursor {
+			cursor: none;
+		}
+		.visual {
+			animation: stm var(--time) step-end;
+		}
+		@keyframes stm {
+			0% {
+				background: var(--colTsk);
+			}
+		}
+		.result,
+		p {
+			background: var(--colBg);
+			border: 1px solid #fff9;
+		}
+		.result {
+			border: 0.1em solid;
+			border-radius: 0.8em;
+			box-shadow: 0 0 6em #666, 0 0 2em #ccc;
+			font-size: 0.84em;
+			height: 11em;
+			letter-spacing: 0.07em;
+			margin-top: -3em;
+			min-width: 18.152em;
+		}
+		.result li,
+		.btns {
+			font-size: 1.7em;
+		}
+		.result li {
+			font-weight: 600;
+			margin: 0.6em 1.2em;
+			text-shadow: 0.12em 0.09em 0 #000;
+			white-space: pre;
+		}
+		.result li:first-child {
+			font-size: 2em;
+			margin: 0.59em 1em 0;
+		}
+		.center,
+		.screen {
+			box-sizing: border-box;
+		}
+		.center,
+		.circle {
+			border: 1em solid var(--colTheme2);
+			border-radius: 50%;
+		}
+		.center {
+			--cent: 90%;
+			--cross: 26px;
+			font-size: 1.3em;
+			height: var(--cent);
+			place-self: center;
+			width: var(--cent);
+		}
+		.task .center {
+			border: none;
+			border-radius: 0;
+			height: var(--cross);
+			width: var(--cross);
+		}
+		:is(.task .center, .screen)::after {
+			content: "";
+		}
+		.center::after {
+			animation: cross 0.6s ease-in;
+			background: #888;
+			clip-path: polygon(
+				0 40%,
+				40% 40%,
+				40% 0%,
+				60% 0%,
+				60% 40%,
+				100% 40%,
+				100% 60%,
+				60% 60%,
+				60% 100%,
+				40% 100%,
+				40% 60%,
+				0 60%
+			);
+			height: var(--cross);
+			width: var(--cross);
+			z-index: 30;
+		}
+		@keyframes cross {
+			0% {
+				scale: 0;
+			}
+		}
+		.circle {
+			border-width: 0.92em;
+			font-size: 0.768em;
+			height: 5.9em;
+			margin: 0 0 16px;
+			width: 5.9em;
+		}
+		.btns {
+			animation: btn 0.6s ease-in;
+			margin-bottom: 22px;
+			z-index: 20;
+		}
+		.btns .none,
+		.none {
+			display: none;
+		}
+		@keyframes btn {
+			0% {
+				opacity: 0;
+			}
+		}
+		.btns li,
+		p,
+		ol {
+			line-height: 1.7;
+		}
+		.btns li {
+			background: linear-gradient(
+				#000,
+				#0000 12%,
+				#0000 88%,
+				#000
+			),
+			linear-gradient(
+				90deg,
+				#000,
+				var(--colTsk) 6%,
+				var(--colTsk) 94%,
+				#000
+			);
+			color: #000;
+			display: inline-block;
+			font-weight: 600;
+			height: 1.65em;
+			margin: 0 0.8em;
+			width: 3.9em;
+		}
+		.btns-toggle {
+			animation: btns-toggle 2s;
+			opacity: 0;
+		}
+		@keyframes btns-toggle {
+			20%,
+			80% {
+				opacity: 1;
+			}
+		}
+		p {
+			font-size: 1.5em;
+			height: 1.7em;
+			text-shadow: 0.08em 0.08em 0 #000;
+			width: 4.8em;
+		}
+		.help {
+			width: 1.75em;
+			z-index: 10;
+		}
+		.help:has(ol) {
+			height: auto;
+			width: auto;
+		}
+		ul,
+		ol {
+			list-style: none;
+			white-space: nowrap;
+		}
+		ol {
+			counter-reset: ol;
+			font-size: 0.66em;
+			margin: 0.55em 1.7em 0.9em 2.6em;
+			text-align: left;
+		}
+		ol li::before {
+			content: counter(ol) ".";
+			counter-increment: ol;
+			margin-left: -1.7em;
+			position: absolute;
+			text-align: right;
+			width: 1em;
+		}
+		.speaker,
+		.error {
+			font-size: 1.3em;
+		}
+		.speaker {
+			margin: 16px 0 0;
+		}
+		.ctrlstack {
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			pointer-events: none;
+		}
+		.ctrlstack div {
+			pointer-events: auto;
+		}
+		.mode {
+			background: var(--colStack);
+			height: 1.7em;
+			width: 1.7em;
+		}
+		.screen {
+			border: calc(1.5em / 8) solid var(--colStack);
+			height: 1.5em;
+			margin-top: 1.7em;
+			place-content: center;
+			width: 1.5em;
+			z-index: -1;
+		}
+		.screen::after {
+			clip-path: polygon(
+				0 31%,
+				31% 31%,
+				31% 0,
+				69% 0,
+				69% 31%,
+				100% 31%,
+				100% 69%,
+				69% 69%,
+				69% 100%,
+				31% 100%,
+				31% 69%,
+				0 69%
+			);
+			height: calc(1.5em + 2px);
+			width: calc(1.5em + 2px);
+		}
+		.error {
+			font-family: monospace;
+			margin: 4em 0 0;
+		}
+		:is(.center, .circle).active {
+			opacity: 0.3;
+		}
+		.center.active::after {
+			background: #ccc;
+		}
+		p.active,
+		p.active ol {
+			color: #999;
+		}
+		p.active {
+			border-color: #999;
+		}
+		:is(.btns li, .speaker, .ctrlstack div).active {
+			opacity: 0.5;
+		}
+		@media (orientation: portrait) {
+			.grid {
+				margin-top: 7vh;
+			}
+			.btns {
+				margin-bottom: 32px;
+			}
+		}
+		@media (min-width: 600px) {
+			.grid {
+				gap: 1.5em;
+			}
+			.center {
+				--cent: 85%;
+				font-size: 1.1em;
+			}
+		}
+		@media (min-width: 600px) and (min-height: 600px) {
+			.grid {
+				font-size: 0.6em;
+			}
+		}
+		@media (min-width: 1020px) {
+			.grid {
+				gap: 1.3em;
+			}
+		}
+		@media (orientation: portrait) and (min-width: 700px) {
+			.grid {
+				font-size: 1.5vw;
+			}
+			.result {
+				font-size: 1.85vw;
+			}
+			.center {
+				--cross: 3.6vw;
+			}
+			.circle {
+				font-size: 1.8vw;
+			}
+			.btns {
+				font-size: 3.7vw;
+			}
+		}
+		@media (orientation: portrait) and (min-width: 780px) {
+			p {
+				font-size: 3.1vw;
+			}
+			ol {
+				font-size: 1.9vw;
+			}
+			.speaker,
+			.error {
+				font-size: 2.6vw;
+			}
+			.ctrlstack {
+				font-size: 2.2vw;
+			}
+		}
+		@media (orientation: landscape) and (min-height: 700px) {
+			.grid {
+				font-size: 1.5vh;
+			}
+			.result {
+				font-size: 1.85vh;
+			}
+			.center {
+				--cross: 3.6vh;
+			}
+			.circle {
+				font-size: 1.8vh;
+			}
+			.btns {
+				font-size: 3.7vh;
+			}
+		}
+		@media (orientation: landscape) and (min-height: 780px) {
+			p {
+				font-size: 3.1vh;
+			}
+			ol {
+				font-size: 1.9vh;
+			}
+			.speaker,
+			.error {
+				font-size: 2.6vh;
+			}
+			.ctrlstack {
+				font-size: 2.2vh;
+			}
+		}
+		.mode {
+			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ccircle cx='256' cy='256' r='80.6'/%3E%3Cpath stroke='%23000' stroke-linecap='round' stroke-width='35.55' d='m417.77 94.23-62.02 62.02M484.78 256h-87.7m20.69 161.77-62.02-62.02M256 484.78v-87.7M94.23 417.76l62.02-62.02M27.22 256h87.7M94.24 94.23l62.02 62.02M256 27.22v87.7'/%3E%3C/svg%3E") center/cover;
+		}
+		</style>
+		<script>
+		addEventListener("DOMContentLoaded", () => {
+			"use strict";
+			const lang = {
+				btns: {
+					0: "A",
+					1: "L",
+					2: "Buttons",
+					3: " On",
+					4: " Off"
+				},
+				ctrl: {
+					0: "N",
+					1: "X"
+				},
+				error: {
+					0: "No speech API",
+					1: "Unsound value"
+				},
+				ol: {
+					0: "Start task on the circle",
+					1: "Find repeats of N states back",
+					2: "Visual press A, aural press L",
+					3: "End task on the center cross"
+				},
+				res: {
+					0: "Index",
+					1: "Block",
+					2: "Average",
+					3: "Next up",
+					4: " back",
+					5: "Targets",
+					6: "Non-targets"
+				}
+			};
+			const config = settings,
+				V = {
+					block: [],
+					bool: false
+				},
+				A = {
+					block: [],
+					bool: false
+				},
+				audio = new AudioContext(),
+				auto = {
+					circle: false,
+					count: 0,
+					mode: false,
+					sum: 0
+				},
+				[board, head] = [document.body, document.head],
+				speech = window.speechSynthesis,
+				wake = async () => {
+					wakeReq = await navigator.wakeLock.request("screen");
+				};
+			let count, cursorOff, delay, idx, prevTargets,
+				targets, timer, trials, wakeReq,
+				N = config.limitMin;
+			function $(sel, el = board) {
+				return el.querySelector(sel);
+			}
+			function create(tag, parent) {
+				const el = document.createElement(tag);
+				if (parent) {
+					parent.append(el);
+				}
+				return el;
+			}
+			function error(txt, terminate = true) {
+				const el = create("div", board);
+				el.className = "error";
+				el.textContent = `[${txt}]`;
+				if (terminate) {
+					throw new Error(txt);
+				}
+			}
+			function ocillate(props) {
+				if (!config.sound) {
+					return;
+				}
+				const p = {...{
+					gain: 0.2,
+					ramp: true,
+					start: 0,
+					wave: "sine"
+				}, ...props};
+				const o = new OscillatorNode(audio, {
+					frequency: p.freq,
+					type: p.wave
+				});
+				const g = new GainNode(audio, {
+					gain: p.gain
+				});
+				g.gain.setValueAtTime(p.gain, audio.currentTime + p.start + 0.01);
+				if (p.ramp) {
+					g.gain.exponentialRampToValueAtTime(
+						0.0001,
+						audio.currentTime + p.stop
+					);
+				}
+				o.connect(g).connect(audio.destination);
+				o.start(audio.currentTime + p.start);
+				o.stop(audio.currentTime + p.stop);
+			}
+			function playPress() {
+				ocillate({
+					freq: 540,
+					stop: 0.1
+				});
+			}
+			function playAlert() {
+				let [a, b] = [0, 13];
+				const inc = 9;
+				while (b < 68) {
+					ocillate({
+						freq: 1600,
+						start: a / 100,
+						stop: b / 100
+					});
+					a += inc;
+					b += inc;
+				}
+			}
+			function speak(stm, vol = 1) {
+				if (!speech) {
+					return;
+				}
+				const req = new SpeechSynthesisUtterance(stm);
+				req.lang = navigator.language;
+				req.rate = 1.1;
+				req.volume = vol;
+				speech.speak(req);
+			}
+			function ctrl(el, func, txt) {
+				let active;
+				if (txt) {
+					el.textContent = txt;
+				}
+				el.addEventListener("pointerdown", () => {
+					playPress();
+					el.classList.add("active");
+					active = true;
+					board.addEventListener("pointerup", () => {
+						el.classList.remove("active");
+						active = false;
+					}, {once: true});
+				});
+				el.addEventListener("pointerup", () => {
+					if (active) {
+						el.classList.remove("active");
+						active = false;
+						func(el);
+					}
+				});
+			}
+			function setTrials() {
+				trials = config.base + N;
+			}
+			function init() {
+				const grid = $("#tmpl-0", head).content;
+				const keyDwn = {
+					KeyA() {
+						btn(V.bool, "V");
+					},
+					KeyB() {
+						if (!board.classList.contains("task")) {
+							config.buttons = !config.buttons;
+							btns();
+						}
+					},
+					KeyL() {
+						if (config.sound) {
+							btn(A.bool, "A");
+						}
+					},
+					Space() {
+						if (auto.circle) {
+							run();
+						} else {
+							toggle();
+						}
+					}
+				};
+				function toggle() {
+					if (board.classList.contains("task")) {
+						clear();
+						board.removeEventListener("mousemove", cursor);
+						clearTimeout(cursorOff);
+						board.classList.remove("task", "no-cursor");
+						main();
+					} else {
+						run();
+					}
+				}
+				ctrl(
+					$(".center", grid),
+					toggle
+				);
+				[auto.mode, auto.count] = [false, 0];
+				setTrials();
+				board.style.setProperty("--time", `${config.timeStimulus / 1000}s`);
+				if (config.nightMode) {
+					board.className = "night-mode";
+				}
+				board.addEventListener("keydown", (e) => {
+					if (!e.repeat && Object.hasOwn(keyDwn, e.code)) {
+						keyDwn[e.code]();
+					}
+				});
+				board.addEventListener("pointerdown", (e) => e.preventDefault());
+				board.addEventListener("touchend", (e) => e.preventDefault()); //iOS
+				board.append(grid);
+				main();
+				if (!speech) {
+					error(lang.error[0], false);
+				}
+			}
+			function prep() {
+				[...board.children].slice(1).forEach((el) => el.remove());
+			}
+			function main() {
+				const clone = $("#tmpl-1", head).content.cloneNode(true);
+				function setN(prssd) {
+					if (prssd) {
+						if (N >= config.limitMax) {
+							N = config.limitMin;
+						} else {
+							N += 1;
+						}
+						setTrials();
+					}
+					return `${lang.ctrl[0]} ${N}`;
+				}
+				function setX(prssd) {
+					if (prssd) {
+						auto.mode = !auto.mode;
+					}
+					return `${lang.ctrl[1]} ${
+						auto.mode
+						? config.blocks
+						: 1
+					}`;
+				}
+				function help(el) {
+					if (!el.firstChild.nodeValue) {
+						el.textContent = "?";
+						return;
+					}
+					el.firstChild.replaceWith(create("ol"));
+					Object.values(lang.ol).forEach((txt) => {
+						create("li", el.firstChild).textContent = txt;
+					});
+				}
+				function speaker(prssd) {
+					if (prssd) {
+						config.sound = !config.sound;
+					}
+					return (
+						config.sound
+						? "🔊"
+						: "🔇"
+					);
+				}
+				function nightMode() {
+					config.nightMode = !config.nightMode;
+					board.classList.toggle("night-mode", config.nightMode);
+				}
+				function fullscreen() {
+					if (document.fullscreenElement) {
+						document.exitFullscreen();
+					} else {
+						board.requestFullscreen();
+					}
+				}
+				prep();
+				ctrl(
+					$(".n", clone),
+					(el) => {
+						el.textContent = setN(true);
+					},
+					setN()
+				);
+				ctrl(
+					$(".x", clone),
+					(el) => {
+						el.textContent = setX(true);
+					},
+					setX()
+				);
+				ctrl(
+					$(".help", clone),
+					help,
+					"?"
+				);
+				ctrl(
+					$(".speaker", clone),
+					(el) => {
+						el.textContent = speaker(true);
+					},
+					speaker()
+				);
+				ctrl(
+					$(".mode", clone),
+					nightMode
+				);
+				ctrl(
+					$(".screen", clone),
+					fullscreen
+				);
+				if (!document.fullscreenEnabled) {
+					$(".screen", clone).className = "none";
+				}
+				[auto.count, auto.sum] = [0, 0];
+				board.append(clone);
+			}
+			function build(stim, olap) {
+				let stm;
+				let [i, t, trg] = [0, 0, []];
+				const s = new Array(trials);
+				const sample = () => stim[Math.floor(Math.random() * stim.length)];
+				if (olap) {
+					trg = prevTargets.splice(0, config.overlap);
+				} else {
+					idx = [...new Array(config.base).keys()].map((inc) => N + inc);
+				}
+				while (trg.length < config.targets) {
+					trg.push(idx.splice(
+						Math.floor(Math.random() * idx.length),
+						1
+					)[0]);
+				}
+				prevTargets = trg;
+				trg.sort((a, b) => a - b);
+				while (i < config.targets) {
+					t = trg[i];
+					stm = sample();
+					while (stm === s[t - N * 2]) {
+						stm = sample();
+					}
+					if (s[t - N]) {
+						stm = s[t - N];
+					}
+					[s[t - N], s[t]] = [stm, stm];
+					i += 1;
+				}
+				i = 0;
+				while (i < trials) {
+					while (!s[i]) {
+						stm = sample();
+						if (stm !== s[i - N] && stm !== s[i + N]) {
+							s[i] = stm;
+						}
+					}
+					i += 1;
+				}
+				return s;
+			}
+			function btn(match, id) {
+				if (!btn.fired || btn.fired[id]) {
+					return;
+				}
+				if (match) {
+					btn[id][0] += 1;
+				} else {
+					btn[id][1] += 1;
+				}
+				btn.fired[id] = true;
+			}
+			function btns() {
+				const clone = $("#tmpl-2", head).content.cloneNode(true);
+				const ul = [...$(".btns", clone).children];
+				$("div.btns")?.remove();
+				if (board.classList.contains("task") && !auto.circle) {
+					ctrl(
+						ul[0],
+						() => btn(V.bool, "V"),
+						lang.btns[0]
+					);
+					ctrl(
+						ul[1],
+						() => btn(A.bool, "A"),
+						lang.btns[1]
+					);
+					if (!config.sound) {
+						ul[1].className = "none";
+					}
+					board.append(clone);
+				}
+				if (!board.classList.contains("task")) {
+					const el = create("div", board);
+					el.className = "btns btns-toggle";
+					el.textContent = `${lang.btns[2]}${
+						config.buttons
+						? lang.btns[3]
+						: lang.btns[4]
+					}`;
+				}
+			}
+			function cursor(e) {
+				board.classList.remove("no-cursor");
+				clearTimeout(cursorOff);
+				if (e.target === board) {
+					cursorOff = setTimeout(() => {
+						board.classList.add("no-cursor")
+					}, 1200);
+				}
+			}
+			function clear() {
+				clearTimeout(delay);
+				clearInterval(timer);
+				$(".visual", $(".grid"))?.dispatchEvent(new Event("animationend"));
+				speech?.cancel();
+				wakeReq?.release();
+			}
+			function state() {
+				if (count === trials) {
+					clear();
+					result();
+					return;
+				}
+				const vStm = V.block[count];
+				const aStm = A.block[count];
+				const sq = $(vStm);
+				V.bool = vStm === V.block[count - N];
+				A.bool = aStm === A.block[count - N];
+				btn.fired = {
+					A: false,
+					V: false
+				};
+				count += 1;
+				if (document.hidden) {
+					return;
+				}
+				sq.addEventListener("animationend", () => {
+					sq.classList.remove("visual");
+				}, {once: true});
+				requestAnimationFrame(() => {
+					sq.classList.add("visual");
+					if (config.sound) {
+						speak(aStm);
+					}
+				});
+			}
+			function run() {
+				prep();
+				[btn.V, btn.A, count, auto.circle] = [[0, 0], [0, 0], 0, false];
+				delete btn.fired;
+				board.classList.add("task");
+				if (config.buttons) {
+					btns();
+				} else {
+					board.classList.add("no-cursor");
+					board.addEventListener("mousemove", cursor);
+				}
+				targets = (
+					config.sound
+					? config.targets * 2
+					: config.targets
+				);
+				if (
+					N + targets - (
+						config.overlapCtrl
+						? config.overlap
+						: 0
+					) > trials
+				) {
+					error(lang.error[1]);
+				}
+				V.block = build([
+					".s-1", ".s-2", ".s-3", ".s-4",
+					".s-5", ".s-6", ".s-7", ".s-8"
+				]);
+				A.block = build(config.aural, config.overlapCtrl);
+				speak(" ", 0);
+				wake();
+				delay = setTimeout(() => {
+					state();
+					timer = setInterval(state, config.timeRate);
+				}, 2100);
+			}
+			function result() {
+				const clone = $("#tmpl-3", head).content.cloneNode(true);
+				const [rV, wV, rA, wA] = [
+					btn.V[0], btn.V[1],
+					btn.A[0], btn.A[1]
+				];
+				const diff = (rV + rA) - (wV + wA);
+				const data = [
+					`${lang.res[0]}: ${
+						diff > 0
+						? Math.round((diff / targets) * 100)
+						: 0
+					}%`
+				];
+				if (auto.mode) {
+					auto.count += 1;
+					auto.sum += N;
+					if (auto.count !== config.blocks) {
+						const circle = $(".circle", clone);
+						const [mV, mA] = [
+							config.targets - rV + wV,
+							config.targets - rA + wA
+						];
+						if (
+							mV < config.autoUp && (
+								config.sound
+								? mA < config.autoUp
+								: true
+							)
+						) {
+							N += 1;
+						} else if (
+							N > config.limitMin &&
+							(mV > config.autoDown || mA > config.autoDown)
+						) {
+							N -= 1;
+						}
+						setTrials();
+						$(".btns")?.remove();
+						ctrl(
+							circle,
+							run
+						);
+						circle.classList.remove("none");
+						auto.circle = true;
+					}
+					data.push(
+						`${lang.res[1]}: ${auto.count} / ${config.blocks}`,
+						`${
+							auto.count === config.blocks
+							? `${lang.res[2]}: ${Math.round(auto.sum / config.blocks)}`
+							: `${lang.res[3]}: ${N}`
+						}${lang.res[4]}`
+					);
+				} else {
+					data.push(
+						`${lang.res[5]}: ${rV + rA} / ${targets}`,
+						`${lang.res[6]}: ${wV + wA}`
+					);
+				}
+				data.forEach((txt, i) => {
+					clone.children[0].children[i].textContent = txt;
+				});
+				if (!document.hidden) {
+					playAlert();
+				}
+				board.append(clone);
+			}
+			init();
+		}, {once: true});
+		</script>
+		<template id="tmpl-0">
+			<div class="grid">
+				<div class="sq s-1"></div>
+				<div class="sq s-2"></div>
+				<div class="sq s-3"></div>
+				<div class="sq s-4"></div>
+				<div class="center"></div>
+				<div class="sq s-5"></div>
+				<div class="sq s-6"></div>
+				<div class="sq s-7"></div>
+				<div class="sq s-8"></div>
+			</div>
+		</template>
+		<template id="tmpl-1">
+			<p class="n"></p>
+			<div class="speaker"></div>
+			<p class="x"></p>
+			<p class="help"></p>
+			<div class="ctrlstack">
+				<div class="mode"></div>
+				<div class="screen"></div>
+			</div>
+		</template>
+		<template id="tmpl-2">
+			<ul class="btns">
+				<li></li>
+				<li></li>
+			</ul>
+		</template>
+		<template id="tmpl-3">
+			<ul class="result">
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<div class="circle none"></div>
+		</template>
+	</head>
+	<body></body>
+</html>
+
