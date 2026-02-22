@@ -1,0 +1,7 @@
+{
+	"scripts": {
+		"app": "deno -A deno.mjs",
+		"start": "bun bun.mjs"
+	}
+}
+
